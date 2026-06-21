@@ -41,7 +41,9 @@ class TriggerListener(
         if (now < (cooldowns[player.uniqueId] ?: 0L)) return
         cooldowns[player.uniqueId] = now + plugin.cooldownMs
 
-        val destination = target.cuboid.centerTopLocation(target.arrivalYaw, target.arrivalPitch)
+        val yaw = target.arrivalYaw ?: player.location.yaw
+        val pitch = target.arrivalPitch ?: player.location.pitch
+        val destination = target.cuboid.centerTopLocation(yaw, pitch)
         if (destination == null) {
             messages.send(player, "error.target-world-missing", messages.ph("pad", target.name))
             return

@@ -19,6 +19,7 @@ pad:
   unlinked: "<yellow>Unlinked <white><pad></white>.</yellow>"
   trigger-set: "<green>Pad <white><pad></white> trigger set to <white><trigger></white>.</green>"
   arrival-set: "<green>Pad <white><pad></white> arrival facing set to yaw <white><yaw></white>, pitch <white><pitch></white>.</green>"
+  arrival-cleared: "<green>Pad <white><pad></white> now keeps the player's look direction on arrival.</green>"
   tp: "<green>Teleported to pad <white><pad></white>.</green>"
 
 # --- List & info ---
@@ -31,6 +32,7 @@ info:
   region: "<dark_gray>- </dark_gray><gray>Region: <white><min></white> <dark_gray>to</dark_gray> <white><max></white></gray>"
   trigger: "<dark_gray>- </dark_gray><gray>Trigger: <aqua><trigger></aqua></gray>"
   arrival: "<dark_gray>- </dark_gray><gray>Arrival: yaw <white><yaw></white>, pitch <white><pitch></white></gray>"
+  arrival-look: "<dark_gray>- </dark_gray><gray>Arrival: <white>keep look direction</white></gray>"
   link: "<dark_gray>- </dark_gray><gray>Linked to: <white><target></white></gray>"
 
 # --- Teleport feedback (actionbar; no prefix) ---
@@ -50,7 +52,7 @@ help:
     - "<white>/shift link <padA> <padB></white> <dark_gray>-</dark_gray> <gray>link two pads (both ways)</gray>"
     - "<white>/shift unlink <pad></white> <dark_gray>-</dark_gray> <gray>remove a pad's link</gray>"
     - "<white>/shift trigger <name> <sneak|jump></white> <dark_gray>-</dark_gray> <gray>change a pad's trigger</gray>"
-    - "<white>/shift arrival <name> [yaw] [pitch]</white> <dark_gray>-</dark_gray> <gray>set arrival facing (no args = your facing)</gray>"
+    - "<white>/shift arrival <name> <yaw> <pitch></white> <dark_gray>-</dark_gray> <gray>fix arrival facing (no args = your facing; <white>clear</white> = keep look)</gray>"
     - "<white>/shift list</white> <dark_gray>-</dark_gray> <gray>list all pads</gray>"
     - "<white>/shift info <name></white> <dark_gray>-</dark_gray> <gray>show pad details</gray>"
     - "<white>/shift remove <name></white> <dark_gray>-</dark_gray> <gray>delete a pad</gray>"

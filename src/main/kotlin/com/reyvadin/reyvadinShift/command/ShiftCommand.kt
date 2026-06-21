@@ -67,15 +67,7 @@ class ShiftCommand(
         } else {
             TriggerType.SNEAK
         }
-        store.add(
-            Pad(
-                name = name,
-                cuboid = cuboid,
-                trigger = trigger,
-                arrivalYaw = player.location.yaw,
-                arrivalPitch = player.location.pitch,
-            ),
-        )
+        store.add(Pad(name = name, cuboid = cuboid, trigger = trigger))
         messages.send(sender, "pad.created", messages.ph("pad", name), messages.ph("trigger", trigger.lower()))
     }
 
@@ -105,8 +97,14 @@ class ShiftCommand(
     }
 
     private fun arrival(sender: CommandSender, args: Array<out String>) {
-        if (args.size < 2) return usage(sender, "/shift arrival <name> [yaw] [pitch]")
+        if (args.size < 2) return usage(sender, "/shift arrival <name> <yaw> <pitch> | clear")
         val pad = store.get(args[1]) ?: return notFound(sender, args[1])
+        if (args.size >= 3 && (args[2].equals("clear", ignoreCase = true) || args[2].equals("reset", ignoreCase = true))) {
+            pad.arrivalYaw = null
+            pad.arrivalPitch = null
+            store.save()
+            return messages.send(sender, "pad.arrival-cleared", messages.ph("pad", pad.name))
+        }
         val yaw: Float
         val pitch: Float
         if (args.size >= 4) {
@@ -152,7 +150,13 @@ class ShiftCommand(
             ),
         )
         sender.sendMessage(messages.component("info.trigger", messages.ph("trigger", pad.trigger.lower())))
-        sender.sendMessage(messages.component("info.arrival", messages.ph("yaw", fmt(pad.arrivalYaw)), messages.ph("pitch", fmt(pad.arrivalPitch))))
+        val yaw = pad.arrivalYaw
+        val pitch = pad.arrivalPitch
+        if (yaw == null && pitch == null) {
+            sender.sendMessage(messages.component("info.arrival-look"))
+        } else {
+            sender.sendMessage(messages.component("info.arrival", messages.ph("yaw", yaw?.let { fmt(it) } ?: "look"), messages.ph("pitch", pitch?.let { fmt(it) } ?: "look")))
+        }
         sender.sendMessage(messages.component("info.link", messages.ph("target", pad.target ?: "-")))
     }
 
@@ -166,7 +170,9 @@ class ShiftCommand(
         val player = sender as? Player ?: return playerOnly(sender)
         if (args.size < 2) return usage(sender, "/shift tp <name>")
         val pad = store.get(args[1]) ?: return notFound(sender, args[1])
-        val loc = pad.cuboid.centerTopLocation(pad.arrivalYaw, pad.arrivalPitch)
+        val yaw = pad.arrivalYaw ?: player.location.yaw
+        val pitch = pad.arrivalPitch ?: player.location.pitch
+        val loc = pad.cuboid.centerTopLocation(yaw, pitch)
             ?: return messages.send(sender, "error.target-world-missing", messages.ph("pad", pad.name))
         player.teleport(loc)
         messages.send(sender, "pad.tp", messages.ph("pad", pad.name))
@@ -210,7 +216,12 @@ class ShiftCommand(
                 3 -> padNames(args[2])
                 else -> emptyList()
             }
-            "unlink", "info", "remove", "tp", "arrival" -> if (args.size == 2) padNames(args[1]) else emptyList()
+            "arrival" -> when (args.size) {
+                2 -> padNames(args[1])
+                3 -> listOf("clear").filter { it.startsWith(args[2].lowercase()) }
+                else -> emptyList()
+            }
+            "unlink", "info", "remove", "tp" -> if (args.size == 2) padNames(args[1]) else emptyList()
             else -> emptyList()
         }
     }
