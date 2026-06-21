@@ -1,0 +1,6 @@
+name: ReyvadinShift
+version: '${version}'
+
+main: com.reyvadin.reyvadinShift.ReyvadinShift
+api-version: '1.21.11'
+load: POSTWORLD
