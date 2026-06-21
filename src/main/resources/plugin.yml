@@ -4,3 +4,17 @@ version: '${version}'
 main: com.reyvadin.reyvadinShift.ReyvadinShift
 api-version: '1.21.11'
 load: POSTWORLD
+
+commands:
+  shift:
+    description: Manage shift elevator pads.
+    usage: /shift help
+    aliases: [shifts]
+
+permissions:
+  reyvadinshift.admin:
+    description: Manage shift pads (all /shift subcommands).
+    default: op
+  reyvadinshift.use:
+    description: Use shift pads (triggering teleports).
+    default: true

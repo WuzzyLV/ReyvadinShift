@@ -1,0 +1,3 @@
+# Minimum delay, in milliseconds, before a player can trigger another shift teleport.
+# Prevents accidental re-triggering and teleport loops between co-located pads.
+cooldown-ms: 500

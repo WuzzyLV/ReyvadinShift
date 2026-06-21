@@ -1,0 +1,71 @@
+# All ReyvadinShift player-facing text. Values are MiniMessage strings.
+# Docs: https://docs.advntr.dev/minimessage/format.html
+# Placeholders available per message are shown in <angle brackets>.
+
+prefix: "<gradient:#5e9cff:#9b5eff><bold>Shift</bold></gradient> <dark_gray>»</dark_gray> "
+
+# --- Selection ---
+selection:
+  enabled: "<green>Selection mode <bold>ON</bold>. <gray>Left-click = corner 1, right-click = corner 2.</gray>"
+  disabled: "<yellow>Selection mode <bold>OFF</bold>.</yellow>"
+  pos1: "<aqua>Corner 1 set <gray>at <white><x>, <y>, <z></white>.</gray>"
+  pos2: "<aqua>Corner 2 set <gray>at <white><x>, <y>, <z></white>.</gray>"
+
+# --- Pad management ---
+pad:
+  created: "<green>Created pad <white><pad></white> <gray>(trigger: <white><trigger></white>).</gray>"
+  removed: "<yellow>Removed pad <white><pad></white>.</yellow>"
+  linked: "<green>Linked <white><a></white> <gray><-></gray> <white><b></white>.</green>"
+  unlinked: "<yellow>Unlinked <white><pad></white>.</yellow>"
+  trigger-set: "<green>Pad <white><pad></white> trigger set to <white><trigger></white>.</green>"
+  arrival-set: "<green>Pad <white><pad></white> arrival facing set to yaw <white><yaw></white>, pitch <white><pitch></white>.</green>"
+  tp: "<green>Teleported to pad <white><pad></white>.</green>"
+
+# --- List & info ---
+list:
+  header: "<gray>Pads:</gray>"
+  entry: "<dark_gray>- </dark_gray><white><pad></white> <gray>[<aqua><trigger></aqua>] -> <white><target></white></gray>"
+  empty: "<gray>No pads defined yet. Use <white>/shift select</white> then <white>/shift create</white>.</gray>"
+info:
+  header: "<gray>Pad <white><pad></white>:</gray>"
+  region: "<dark_gray>- </dark_gray><gray>Region: <white><min></white> <dark_gray>to</dark_gray> <white><max></white></gray>"
+  trigger: "<dark_gray>- </dark_gray><gray>Trigger: <aqua><trigger></aqua></gray>"
+  arrival: "<dark_gray>- </dark_gray><gray>Arrival: yaw <white><yaw></white>, pitch <white><pitch></white></gray>"
+  link: "<dark_gray>- </dark_gray><gray>Linked to: <white><target></white></gray>"
+
+# --- Teleport feedback (actionbar; no prefix) ---
+teleport:
+  actionbar: "<gradient:#5e9cff:#9b5eff>Shifted to <bold><pad></bold></gradient>"
+
+# --- Misc ---
+reload:
+  done: "<green>Reloaded config and messages.</green>"
+
+# --- Help ---
+help:
+  header: "<gradient:#5e9cff:#9b5eff><bold>ReyvadinShift</bold></gradient> <gray>commands:</gray>"
+  lines:
+    - "<white>/shift select</white> <dark_gray>-</dark_gray> <gray>toggle bare-hand selection mode</gray>"
+    - "<white>/shift create <name> [sneak|jump]</white> <dark_gray>-</dark_gray> <gray>create a pad from your selection</gray>"
+    - "<white>/shift link <padA> <padB></white> <dark_gray>-</dark_gray> <gray>link two pads (both ways)</gray>"
+    - "<white>/shift unlink <pad></white> <dark_gray>-</dark_gray> <gray>remove a pad's link</gray>"
+    - "<white>/shift trigger <name> <sneak|jump></white> <dark_gray>-</dark_gray> <gray>change a pad's trigger</gray>"
+    - "<white>/shift arrival <name> [yaw] [pitch]</white> <dark_gray>-</dark_gray> <gray>set arrival facing (no args = your facing)</gray>"
+    - "<white>/shift list</white> <dark_gray>-</dark_gray> <gray>list all pads</gray>"
+    - "<white>/shift info <name></white> <dark_gray>-</dark_gray> <gray>show pad details</gray>"
+    - "<white>/shift remove <name></white> <dark_gray>-</dark_gray> <gray>delete a pad</gray>"
+    - "<white>/shift tp <name></white> <dark_gray>-</dark_gray> <gray>teleport to a pad</gray>"
+    - "<white>/shift reload</white> <dark_gray>-</dark_gray> <gray>reload config and messages</gray>"
+
+# --- Errors ---
+error:
+  no-permission: "<red>You don't have permission to do that.</red>"
+  player-only: "<red>Only players can use this subcommand.</red>"
+  usage: "<red>Usage: <white><usage></white></red>"
+  no-selection: "<red>You need a full selection first. Use <white>/shift select</white> and click two corners.</red>"
+  name-taken: "<red>A pad named <white><pad></white> already exists.</red>"
+  pad-not-found: "<red>No pad named <white><pad></white>.</red>"
+  invalid-trigger: "<red>Invalid trigger <white><value></white>. Use <white>sneak</white> or <white>jump</white>.</red>"
+  invalid-number: "<red>Invalid number: <white><value></white>.</red>"
+  same-pad: "<red>You can't link a pad to itself.</red>"
+  target-world-missing: "<red>The destination pad <white><pad></white> is in an unloaded world.</red>"
