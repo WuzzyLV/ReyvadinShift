@@ -6,6 +6,7 @@ import com.reyvadin.reyvadinShift.model.Pad
 import com.reyvadin.reyvadinShift.model.TriggerType
 import com.reyvadin.reyvadinShift.selection.SelectionManager
 import com.reyvadin.reyvadinShift.store.PadStore
+import org.bukkit.Particle
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -20,9 +21,13 @@ class ShiftCommand(
 ) : CommandExecutor, TabCompleter {
 
     private val subcommands = listOf(
-        "select", "create", "link", "unlink", "trigger", "arrival",
+        "select", "create", "link", "unlink", "trigger", "arrival", "effect",
         "list", "info", "remove", "tp", "reload", "help",
     )
+
+    private val effectFields = listOf("particle", "count", "radius", "sound", "volume", "pitch")
+
+    private val EFFECT_USAGE = "/shift effect <name> <${effectFields.joinToString("|")}> <value|clear>"
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (!sender.hasPermission("reyvadinshift.admin")) {
@@ -40,6 +45,7 @@ class ShiftCommand(
             "unlink" -> unlink(sender, args)
             "trigger" -> trigger(sender, args)
             "arrival" -> arrival(sender, args)
+            "effect" -> effect(sender, args)
             "list" -> list(sender)
             "info" -> info(sender, args)
             "remove" -> remove(sender, args)
@@ -121,6 +127,30 @@ class ShiftCommand(
         messages.send(sender, "pad.arrival-set", messages.ph("pad", pad.name), messages.ph("yaw", fmt(yaw)), messages.ph("pitch", fmt(pitch)))
     }
 
+    private fun effect(sender: CommandSender, args: Array<out String>) {
+        if (args.size < 3) return usage(sender, EFFECT_USAGE)
+        val pad = store.get(args[1]) ?: return notFound(sender, args[1])
+        val raw = args.getOrNull(3)
+        val clear = raw == null || raw.equals("clear", ignoreCase = true)
+        val e = pad.effects
+        pad.effects = when (args[2].lowercase()) {
+            "particle" -> e.copy(particle = if (clear) null else raw)
+            "sound" -> e.copy(sound = if (clear) null else raw)
+            "count" -> e.copy(particleCount = if (clear) null else raw!!.toIntOrNull() ?: return invalidNumber(sender, raw))
+            "radius" -> e.copy(radius = if (clear) null else raw!!.toDoubleOrNull() ?: return invalidNumber(sender, raw))
+            "volume" -> e.copy(soundVolume = if (clear) null else raw!!.toFloatOrNull() ?: return invalidNumber(sender, raw))
+            "pitch" -> e.copy(soundPitch = if (clear) null else raw!!.toFloatOrNull() ?: return invalidNumber(sender, raw))
+            else -> return usage(sender, EFFECT_USAGE)
+        }
+        store.save()
+        messages.send(
+            sender, "pad.effect-set",
+            messages.ph("pad", pad.name),
+            messages.ph("field", args[2].lowercase()),
+            messages.ph("value", if (clear) "default" else raw!!),
+        )
+    }
+
     private fun list(sender: CommandSender) {
         val all = store.all()
         if (all.isEmpty()) return messages.send(sender, "list.empty")
@@ -158,6 +188,14 @@ class ShiftCommand(
             sender.sendMessage(messages.component("info.arrival", messages.ph("yaw", yaw?.let { fmt(it) } ?: "look"), messages.ph("pitch", pitch?.let { fmt(it) } ?: "look")))
         }
         sender.sendMessage(messages.component("info.link", messages.ph("target", pad.target ?: "-")))
+        val eff = pad.effects.withDefaults(plugin.defaultEffects)
+        sender.sendMessage(
+            messages.component(
+                "info.effects",
+                messages.ph("particle", eff.particle ?: "none"),
+                messages.ph("sound", eff.sound ?: "none"),
+            ),
+        )
     }
 
     private fun remove(sender: CommandSender, args: Array<out String>) {
@@ -179,7 +217,7 @@ class ShiftCommand(
     }
 
     private fun reload(sender: CommandSender) {
-        plugin.reloadCooldown()
+        plugin.reloadSettings()
         messages.load()
         store.load()
         messages.send(sender, "reload.done")
@@ -195,6 +233,9 @@ class ShiftCommand(
 
     private fun notFound(sender: CommandSender, name: String) =
         messages.send(sender, "error.pad-not-found", messages.ph("pad", name))
+
+    private fun invalidNumber(sender: CommandSender, value: String) =
+        messages.send(sender, "error.invalid-number", messages.ph("value", value))
 
     private fun playerOnly(sender: CommandSender) =
         messages.send(sender, "error.player-only")
@@ -221,6 +262,12 @@ class ShiftCommand(
                 3 -> listOf("clear").filter { it.startsWith(args[2].lowercase()) }
                 else -> emptyList()
             }
+            "effect" -> when (args.size) {
+                2 -> padNames(args[1])
+                3 -> effectFields.filter { it.startsWith(args[2].lowercase()) }
+                4 -> effectValues(args[2].lowercase(), args[3])
+                else -> emptyList()
+            }
             "unlink", "info", "remove", "tp" -> if (args.size == 2) padNames(args[1]) else emptyList()
             else -> emptyList()
         }
@@ -231,4 +278,12 @@ class ShiftCommand(
 
     private fun triggers(prefix: String): List<String> =
         listOf("sneak", "jump").filter { it.startsWith(prefix.lowercase()) }
+
+    private fun effectValues(field: String, prefix: String): List<String> {
+        val options = when (field) {
+            "particle" -> listOf("clear") + Particle.entries.map { it.name.lowercase() }
+            else -> listOf("clear")
+        }
+        return options.filter { it.startsWith(prefix.lowercase()) }
+    }
 }

@@ -5,6 +5,7 @@ import com.reyvadin.reyvadinShift.effect.EffectService
 import com.reyvadin.reyvadinShift.listener.SelectionListener
 import com.reyvadin.reyvadinShift.listener.TriggerListener
 import com.reyvadin.reyvadinShift.message.MessageService
+import com.reyvadin.reyvadinShift.model.EffectConfig
 import com.reyvadin.reyvadinShift.selection.SelectionManager
 import com.reyvadin.reyvadinShift.store.PadStore
 import org.bukkit.plugin.java.JavaPlugin
@@ -19,9 +20,13 @@ class ReyvadinShift : JavaPlugin() {
     var cooldownMs: Long = 500L
         private set
 
+    // Fallback effects a pad uses for any field it doesn't override itself.
+    var defaultEffects: EffectConfig = EffectConfig.EMPTY
+        private set
+
     override fun onEnable() {
         saveDefaultConfig()
-        reloadCooldown()
+        reloadSettings()
 
         messages = MessageService(this).also { it.load() }
         store = PadStore(this).also { it.load() }
@@ -42,8 +47,10 @@ class ReyvadinShift : JavaPlugin() {
         if (::store.isInitialized) store.save()
     }
 
-    fun reloadCooldown() {
+    fun reloadSettings() {
+        saveDefaultConfig() // recreate config.yml if it was deleted
         reloadConfig()
         cooldownMs = config.getLong("cooldown-ms", 500L)
+        defaultEffects = EffectConfig.load(config.getConfigurationSection("effects"))
     }
 }

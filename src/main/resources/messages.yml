@@ -20,6 +20,7 @@ pad:
   trigger-set: "<green>Pad <white><pad></white> trigger set to <white><trigger></white>.</green>"
   arrival-set: "<green>Pad <white><pad></white> arrival facing set to yaw <white><yaw></white>, pitch <white><pitch></white>.</green>"
   arrival-cleared: "<green>Pad <white><pad></white> now keeps the player's look direction on arrival.</green>"
+  effect-set: "<green>Pad <white><pad></white> effect <white><field></white> set to <white><value></white>.</green>"
   tp: "<green>Teleported to pad <white><pad></white>.</green>"
 
 # --- List & info ---
@@ -34,6 +35,7 @@ info:
   arrival: "<dark_gray>- </dark_gray><gray>Arrival: yaw <white><yaw></white>, pitch <white><pitch></white></gray>"
   arrival-look: "<dark_gray>- </dark_gray><gray>Arrival: <white>keep look direction</white></gray>"
   link: "<dark_gray>- </dark_gray><gray>Linked to: <white><target></white></gray>"
+  effects: "<dark_gray>- </dark_gray><gray>Effects: particle <white><particle></white>, sound <white><sound></white></gray>"
 
 # --- Teleport feedback (actionbar; no prefix) ---
 teleport:
@@ -53,6 +55,7 @@ help:
     - "<white>/shift unlink <pad></white> <dark_gray>-</dark_gray> <gray>remove a pad's link</gray>"
     - "<white>/shift trigger <name> <sneak|jump></white> <dark_gray>-</dark_gray> <gray>change a pad's trigger</gray>"
     - "<white>/shift arrival <name> <yaw> <pitch></white> <dark_gray>-</dark_gray> <gray>fix arrival facing (no args = your facing; <white>clear</white> = keep look)</gray>"
+    - "<white>/shift effect <name> <field> <value|clear></white> <dark_gray>-</dark_gray> <gray>override an effect (particle/count/radius/sound/volume/pitch)</gray>"
     - "<white>/shift list</white> <dark_gray>-</dark_gray> <gray>list all pads</gray>"
     - "<white>/shift info <name></white> <dark_gray>-</dark_gray> <gray>show pad details</gray>"
     - "<white>/shift remove <name></white> <dark_gray>-</dark_gray> <gray>delete a pad</gray>"
