@@ -33,6 +33,21 @@ data class Cuboid(
         return Location(w, x, y, z, yaw, pitch)
     }
 
+    fun sameSizeAs(other: Cuboid): Boolean =
+        maxX - minX == other.maxX - other.minX &&
+            maxY - minY == other.maxY - other.minY &&
+            maxZ - minZ == other.maxZ - other.minZ
+
+    // Place [loc] on top of this pad at the same offset it had from [from]'s min corner, keeping its
+    // facing. Lets a player keep their standing spot when shifting between equally sized pads.
+    fun mappedTopLocation(from: Cuboid, loc: Location): Location? {
+        val w = world ?: return null
+        val x = minX + (loc.x - from.minX)
+        val z = minZ + (loc.z - from.minZ)
+        val y = (maxY + 1).toDouble()
+        return Location(w, x, y, z, loc.yaw, loc.pitch)
+    }
+
     fun save(section: ConfigurationSection) {
         section.set("world", worldId.toString())
         section.set("minX", minX); section.set("minY", minY); section.set("minZ", minZ)
