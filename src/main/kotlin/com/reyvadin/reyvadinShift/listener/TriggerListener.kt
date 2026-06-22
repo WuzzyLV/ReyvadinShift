@@ -50,7 +50,7 @@ class TriggerListener(
         }
         effects.play(pad, player.location) // departure, while the player is still on the pad
         player.teleport(destination)
-        messages.actionbar(player, "teleport.actionbar", messages.ph("pad", target.name))
+        messages.actionbar(player, "teleport.${trigger.lower()}", messages.ph("pad", target.name))
         // Delay the arrival ring: on the teleport tick the client is still at the old position and
         // would drop particle packets aimed at the destination.
         plugin.server.scheduler.runTaskLater(plugin, Runnable { effects.play(target, destination) }, 2L)

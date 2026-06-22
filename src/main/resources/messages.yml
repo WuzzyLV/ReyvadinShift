@@ -37,9 +37,10 @@ info:
   link: "<dark_gray>- </dark_gray><gray>Linked to: <white><target></white></gray>"
   effects: "<dark_gray>- </dark_gray><gray>Effects: particle <white><particle></white>, sound <white><sound></white></gray>"
 
-# --- Teleport feedback (actionbar; no prefix) ---
+# --- Teleport feedback (actionbar; no prefix). Picked by the trigger that fired. ---
 teleport:
-  actionbar: "<gradient:#5e9cff:#9b5eff>Shifted to <bold><pad></bold></gradient>"
+  sneak: "<gradient:#5e9cff:#9b5eff>Shifted down to <bold><pad></bold></gradient>"
+  jump: "<gradient:#9b5eff:#5e9cff>Shifted up to <bold><pad></bold></gradient>"
 
 # --- Misc ---
 reload:
